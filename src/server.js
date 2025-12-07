@@ -16,4 +16,4 @@ app.use((req, res) => {
 
 
 
-app.listen(port, () => console.log(`Server started on port ${port}. Press CTRL+C to reload`));
+app.listen(port, () => console.log(`Server started on port ${port}. Press CTRL+C to finish`));
