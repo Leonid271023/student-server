@@ -1,62 +1,35 @@
-import { Student } from "../module/student.js";
+import Student from '../model/student.js';
 
-
-const students = new Map();
-
-
-export const addStudent = ({id, name, password}) => {
-    if(students.has(id)) {
-        return false;
-    }
-    students.set(id, new Student(id, name, password));
-    return true;
+export function createStudent(student){
+    return Student.create(student);
 }
 
-
-export const findStudent = id => students.get(id);
-
-
-export const deleteStudent = id => {
-    const student = students.get(id);
-    if (student) {
-        students.delete(id);
-        return student;
-    }
+export function findStudentById(id){
+    return Student.findById(id);
 }
 
-
-export const updateStudent = (id, data) => {
-    const student = students.get(id);
-    if (student) {
-        Object.assign(student, data);
-        return student;
-    }
+export function deleteStudentById(id){
+    return Student.findByIdAndDelete(id);
 }
 
-
-export const addScore = (id, exam, score) => {
-    const student = students.get(id);
-    if (student) {
-        student.scores[exam] = score;
-        return true;
-
-
-    }
-    return false;
+export function updateStudent(id, data){
+    return Student.findByIdAndUpdate(id, data);
 }
 
-
-export const findByName = (name) => {
-    return Array.from(students.values()).filter(s => s.name.toLowerCase() === name.toLowerCase());
+export function updateStudentScores(id, exam, score){
+    return Student.findByIdAndUpdate(id, {[`scores.${exam}`]: score});
 }
 
-
-export const countByNames = (names) => {
-    names = names.map(name => name.toLowerCase());
-    return Array.from(students.values()).filter(s => names.includes(s.name.toLowerCase())).length;
+export function findStudentByName(name){
+    return Student.find({name: new RegExp(`^${name}$`, 'i')});
 }
 
-
-export const findByMinScore = (exam, minScore) => {
-    return Array.from(students.values()).filter(s => s.scores[exam] >= minScore);
+export function countStudentsByNames(names){
+    const regexConditions = names.map(name => ({name: new RegExp(`^${name}$`, 'i')}))
+    return Student.countDocuments({$or: regexConditions});
 }
+
+export function findStudentsByMinScore(exam, minScore){
+    return Student.find({[`scores.${exam}`]: {$gte: minScore}});
+}
+
