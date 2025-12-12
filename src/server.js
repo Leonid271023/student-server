@@ -1,33 +1,22 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import studentRouter from './routes/studentRoutes.js';
-import {MongoClient} from "mongodb";
-import {init} from "./repository/studentRepository.js";
+import Joi from 'joi';
 
 
-dotenv.config();
-const port = process.env.PORT || 3000;
-const app = express();
-const client = new MongoClient(process.env.MONGO_URI);
+export const studentSchema = Joi.object({
+    id: Joi.number().required(),
+    name: Joi.string().required(),
+    password: Joi.string().required()
+})
 
 
-app.use(express.json());
-app.use(studentRouter);
-app.use((req, res) => {
-    res.status(404).type('text/plain; charset=utf-8').send('Not Found')
-});
+export const updateStudentSchema = Joi.object({
+    name: Joi.string(),
+    password: Joi.string()
+})
 
 
-async function startServer() {
-    try {
-        await client.connect();
-        const database = client.db(process.env.DB_NAME);
-        init(database);
-        app.listen(port, () => console.log(`Server started on port ${port}. Press Ctrl-C to finish`));
-    } catch (e) {
-        console.log('Failed connecting to MongoDB: ', e);
-    }
-}
+export const scoreSchema = Joi.object({
+    examName: Joi.string().required(),
+    score: Joi.number().min(0).max(100).required()
+})
 
 
-startServer();
