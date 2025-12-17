@@ -37,9 +37,8 @@ export const updateStudent = async (id, data) => {
 }
 
 
-export const addScore = async (id, exam, score) => {
-    return await repo.updateStudentScores(id, exam, score);
-}
+export const addScore = async (id, exam, score) => repo.updateStudentScores(id, exam, score);
+
 
 
 export const findByName = async (name) => {
@@ -51,9 +50,8 @@ export const findByName = async (name) => {
 }
 
 
-export const countByNames = async (names) => {
-    return await repo.countStudentsByName(names);
-}
+export const countByNames = (names) =>repo.countStudentsByName(names);
+
 
 
 export const findByMinScore = async (exam, minScore) => {
